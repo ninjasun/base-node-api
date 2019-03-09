@@ -1,4 +1,4 @@
-# ODYSSEUM API
+# BASIC NODE API
 
 install dependencies :
 ```

@@ -1,0 +1,56 @@
+{
+	"development":{
+	  "show_error_in_console": true,
+	  "show_warn_in_console": true,
+	  "show_info_in_console": true,
+	  "show_debug_in_console": false,
+	  "show_silly_in_console": true,
+	  "show_error_in_file": true,
+	  "show_warn_in_file": true,
+	  "show_info_in_file": true,
+	  "show_debug_in_file": true,
+	  "show_silly_in_file": true,
+	  "send_error_by_mail": false
+	},
+	"production":{
+	  "show_error_in_console": false,
+	  "show_warn_in_console": false,
+	  "show_info_in_console": false,
+	  "show_debug_in_console": false,
+	  "show_silly_in_console": false,
+	  "show_error_in_file": true,
+	  "show_warn_in_file": true,
+	  "show_info_in_file": true,
+	  "show_debug_in_file": true,
+	  "show_silly_in_file": true,
+	  "send_error_by_mail": false
+	},
+	"test" : {
+	  "show_error_in_console": false,
+	  "show_warn_in_console": false,
+	  "show_info_in_console": false,
+	  "show_debug_in_console": false,
+	  "show_silly_in_console": false,
+	  "show_error_in_file": true,
+	  "show_warn_in_file": true,
+	  "show_info_in_file": false,
+	  "show_debug_in_file": false,
+	  "show_silly_in_file": false,
+	  "send_error_by_mail": false
+	},
+	"staging" : {
+	  "show_error_in_console": false,
+	  "show_warn_in_console": false,
+	  "show_info_in_console": false,
+	  "show_debug_in_console": false,
+	  "show_silly_in_console": false,
+	  "show_error_in_file": true,
+	  "show_warn_in_file": true,
+	  "show_info_in_file": true,
+	  "show_debug_in_file": true,
+	  "show_silly_in_file": true,
+	  "send_error_by_mail": false
+	},
+	"mail_to_send_report_error": "cvermand@gmail.com"
+  }
+  

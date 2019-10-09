@@ -1,7 +1,7 @@
 'use strict';
-const server = require('./app');
+import server from './app';
 const port = process.env.PORT || 8080;
-const {logger} = require("../services/logger");
+import { logger } from "../services/logger";
 
 
 // launch server

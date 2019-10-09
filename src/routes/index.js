@@ -1,12 +1,12 @@
 "use strict";
 // IMPORTS
-const express       = require('express');
-const router        = express.Router();
-const dotenv        = require('dotenv');
-const {logger} = require("../services/logger");
+import express from 'express';
+import dotenv  from 'dotenv';
+import { logger } from "../services/logger";
 
 dotenv.config();
 const env = process.env.NODE_ENV || 'development';
+const router = express.Router();
 
 function createResJson(req, res, next){
     // todo : change return in logout, login, register, badge
@@ -23,6 +23,6 @@ router.all("*", createResJson);
 // router.use("/", (req, res, next) => {
     // console.log("qwe");
 // })
-router.use('/users', require('../bundles/users/router'));
+// router.use('/users', require('../bundles/users/router'));
 
 module.exports = router;

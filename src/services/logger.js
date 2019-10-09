@@ -1,18 +1,19 @@
 "use strict";
 // IMPORTS
-const {
+import Ramda from 'ramda';
+import {
 	createLogger,
 	format,
 	transports
-} = require('winston');
-const dotenv = require('dotenv');
-const logsConfig = require('../config/logger');
+} from 'winston';
+import dotenv from 'dotenv';
+import logsConfig from '../config/logger';
 const {
 	combine,
 	printf
 } = format;
-const moment = require("moment");
-const dirExistOrCreate = require("../services/files_directory").dir.existOrCreate;
+import moment from "moment";
+
 // TODO create mailing system
 // config
 dotenv.config();
@@ -20,9 +21,7 @@ const env = process.env.NODE_ENV || "development";
 
 function Logging() {
 	console.log(`Logging set to ${env}`);
-	// TODO CREATE DIRS
 	this.dir = `./logs/${env}/${moment().format()}/`;
-
 	const myCustomLevels = {
 		levels: {
 			error: 0,
@@ -52,191 +51,24 @@ function Logging() {
 		)
 	});
 
-	if (env === 'production') {
-		if (logsConfig.production.show_silly_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'silly'
-			}));
-		} else if (logsConfig.production.show_debug_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'debug'
-			}));
-		} else if (logsConfig.production.show_info_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'info'
-			}));
-		} else if (logsConfig.production.show_warn_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'warn'
-			}));
-		} else if (logsConfig.production.show_error_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'error'
-			}));
+	Ramda.mapObjIndexed((value, key) => {
+		if (value === true){
+			let [,level,,output] = key.split('_');
+			if (output === 'console') {
+				logger.add(new transports.Console({
+					level: level
+				}));
+			} else if (output === 'file') {
+				logger.add(new transports.File({
+					filename: `${this.dir}${level}.log`,
+					level: level
+				}));
+			} else if(output === 'mail') {
+				// @TODO send by mail
+			}
 		}
-
-		if (logsConfig.production.show_silly_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}silly.log`,
-				level: 'info'
-			}));
-		}
-		if (logsConfig.production.show_debug_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}debug.log`,
-				level: 'debug'
-			}));
-		}
-		if (logsConfig.production.show_info_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}info.log`,
-				level: 'info'
-			}));
-		}
-		if (logsConfig.production.show_warn_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}warn.log`,
-				level: 'warn'
-			}));
-		}
-		if (logsConfig.production.show_error_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}error.log`,
-				level: 'error'
-			}));
-		}
-		if (logsConfig.production.send_error_by_mail === true) {
-			logger.add(new mailTransport({
-				level: 'error'
-			}));
-		}
-	} else if (env === 'development') {
-		// TODO : is this function usefull ?
-		//	dirExistOrCreate("./logs");
-		//	dirExistOrCreate("./logs/development");
-		if (logsConfig.development.show_silly_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'silly'
-			}));
-		} else if (logsConfig.development.show_debug_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'debug'
-			}));
-		} else if (logsConfig.development.show_info_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'info'
-			}));
-		} else if (logsConfig.development.show_warn_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'warn'
-			}));
-		} else if (logsConfig.development.show_error_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'error'
-			}));
-		}
-
-		if (logsConfig.development.show_silly_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}silly.log`,
-				level: 'silly'
-			}));
-		}
-		if (logsConfig.development.show_debug_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}debug.log`,
-				level: 'debug'
-			}));
-		}
-		if (logsConfig.development.show_info_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}info.log`,
-				level: 'info'
-			}));
-		}
-		if (logsConfig.development.show_warn_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}warn.log`,
-				level: 'warn'
-			}));
-		}
-		if (logsConfig.development.show_error_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}error.log`,
-				level: 'error'
-			}));
-		}
-		if (logsConfig.development.send_error_by_mail === true) {
-			logger.add(new mailTransport({
-				level: 'error'
-			}));
-		}
-	} else if (env === 'test') {
-
-		if (logsConfig.test.show_silly_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'silly'
-			}));
-		} else if (logsConfig.test.show_debug_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'debug'
-			}));
-		} else if (logsConfig.test.show_info_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'info'
-			}));
-		} else if (logsConfig.test.show_warn_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'warn'
-			}));
-		} else if (logsConfig.test.show_error_in_console === true) {
-			logger.add(new transports.Console({
-				level: 'error'
-			}));
-		}
-
-		if (logsConfig.test.show_silly_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}silly.log`,
-				level: 'silly'
-			}));
-		}
-		if (logsConfig.test.show_debug_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}debug.log`,
-				level: 'debug'
-			}));
-		}
-		if (logsConfig.test.show_info_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}info.log`,
-				level: 'info'
-			}));
-		}
-		if (logsConfig.test.show_warn_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}warn.log`,
-				level: 'warn'
-			}));
-		}
-		if (logsConfig.test.show_error_in_file === true) {
-			logger.add(new transports.File({
-				filename: `${this.dir}error.log`,
-				level: 'error'
-			}));
-		}
-		if (logsConfig.test.send_error_by_mail === true) {
-			logger.add(new mailTransport({
-				level: 'error'
-		
-			}));
-		}
-	}
+	}, logsConfig.production);
 	Logging.prototype.logger = logger;
 }
-
-
-// logger.addColors(myCustomLevels.colors);
-
 
 module.exports = new Logging();
